@@ -132,3 +132,13 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+
+/* Blockeditor Base theme */
+.bn-container[data-theming-css-variables-demo][data-color-scheme],
+.bn-container[data-theming-css-variables-demo][data-color-scheme="dark"] {
+  --bn-colors-editor-background: transparent;
+}
+.bn-container[data-theming-css-variables-demo] .bn-block-group .bn-block:not(:has(.bn-toggle-wrapper)) .bn-block-group .bn-block-outer:not([data-prev-depth-changed]):before {
+  border-left: none;
+}

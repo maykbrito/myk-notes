@@ -2,6 +2,7 @@ import {
 	createRootRouteWithContext,
 	HeadContent,
 	Outlet,
+	useNavigate,
 	useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
@@ -11,6 +12,8 @@ import { Toaster } from "@/components/ui/sonner";
 import "../index.css";
 import { Authenticated, Unauthenticated } from "convex/react";
 import { Login } from "@/components/login";
+import { Sidebar } from "@/components/sidebar";
+import { NotesList } from "@/modules/notes/ui/notes-list";
 
 // biome-ignore lint/complexity/noBannedTypes: para de me encher o saco
 export type RouterAppContext = {};
@@ -42,6 +45,8 @@ function RootComponent() {
 		select: (s) => s.isLoading,
 	});
 
+	const navigate = useNavigate();
+
 	return (
 		<>
 			<HeadContent />
@@ -51,12 +56,33 @@ function RootComponent() {
 				disableTransitionOnChange
 				storageKey="vite-ui-theme"
 			>
-				<main className="flex h-dvh w-dvw overflow-hidden">
-					<Authenticated>{isFetching ? <Loader /> : <Outlet />}</Authenticated>
-					<Unauthenticated>
+				<Unauthenticated>
+					<div className="flex h-dvh w-dvw items-center justify-center">
 						<Login />
-					</Unauthenticated>
-				</main>
+					</div>
+				</Unauthenticated>
+
+				<Authenticated>
+					<main className="flex h-dvh w-dvw overflow-hidden">
+						<Sidebar>
+							<NotesList
+								onSelectNote={(nid) => {
+									if (nid === null) return navigate({ to: "/" });
+
+									navigate({
+										to: `/note/${nid}`,
+										params: { nid },
+									});
+								}}
+							/>
+						</Sidebar>
+						<div className="flex-1 flex flex-col overflow-y-auto bg-[color-mix(in_srgb,var(--color-primary)_5%,var(--color-bg)_100%)] relative">
+							<div className="flex-1">
+								{isFetching ? <Loader /> : <Outlet />}
+							</div>
+						</div>
+					</main>
+				</Authenticated>
 
 				<Toaster richColors />
 			</ThemeProvider>

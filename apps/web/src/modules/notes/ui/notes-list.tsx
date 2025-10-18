@@ -11,13 +11,11 @@ import { Item } from "./item";
 interface NotesListProps {
 	parentId?: Id<"notes">;
 	level?: number;
-	selectedNoteId: Id<"notes"> | null;
 	onSelectNote: (id: Id<"notes"> | null) => void;
 }
 export function NotesList({
 	parentId,
 	level = 0,
-	selectedNoteId,
 	onSelectNote,
 }: NotesListProps) {
 	const [expanded, setExpanded] = useState<Record<string, boolean>>({});
@@ -34,14 +32,19 @@ export function NotesList({
 	const archiveNote = useMutation(api.notes.archive);
 
 	const handleCreate = (parentId?: Id<"notes">) => {
-		const content = {
-			type: "doc",
-			content: [],
-		};
-
 		const promise = createNote({
 			parentId,
-			content: JSON.stringify(content),
+			content: JSON.stringify([
+				{
+					type: "heading",
+					content: [
+						{
+							type: "text",
+							text: "New Note",
+						},
+					],
+				},
+			]),
 		});
 
 		toast.promise(promise, {
@@ -55,7 +58,6 @@ export function NotesList({
 		}
 
 		promise.then((noteId) => {
-			localStorage.setItem(`note-${noteId}`, JSON.stringify(content));
 			onSelectNote(noteId);
 		});
 	};
@@ -125,7 +127,6 @@ export function NotesList({
 							<NotesList
 								parentId={note._id}
 								level={level + 1}
-								selectedNoteId={selectedNoteId}
 								onSelectNote={onSelectNote}
 							/>
 						)}
