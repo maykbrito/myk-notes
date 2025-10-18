@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { MiniMenu } from "@/modules/mini-menu/ui/mini-menu";
 
 export function Sidebar({ children }: { children: ReactNode }) {
 	return (
@@ -7,6 +8,7 @@ export function Sidebar({ children }: { children: ReactNode }) {
 				<div className="pt-2" />
 				{children}
 			</nav>
+			<MiniMenu />
 		</aside>
 	);
 }
