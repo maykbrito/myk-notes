@@ -1,50 +1,43 @@
+import type { Id } from "@my-better-t-app/backend/convex/_generated/dataModel";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "convex/react";
-import { api } from "@my-better-t-app/backend/convex/_generated/api";
+import { useState } from "react";
+import { Sidebar } from "@/components/sidebar";
+import { NotesList } from "@/modules/notes/ui/notes-list";
 
 export const Route = createFileRoute("/")({
 	component: HomeComponent,
 });
 
-const TITLE_TEXT = `
- ██████╗ ███████╗████████╗████████╗███████╗██████╗
- ██╔══██╗██╔════╝╚══██╔══╝╚══██╔══╝██╔════╝██╔══██╗
- ██████╔╝█████╗     ██║      ██║   █████╗  ██████╔╝
- ██╔══██╗██╔══╝     ██║      ██║   ██╔══╝  ██╔══██╗
- ██████╔╝███████╗   ██║      ██║   ███████╗██║  ██║
- ╚═════╝ ╚══════╝   ╚═╝      ╚═╝   ╚══════╝╚═╝  ╚═╝
-
- ████████╗    ███████╗████████╗ █████╗  ██████╗██╗  ██╗
- ╚══██╔══╝    ██╔════╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝
-    ██║       ███████╗   ██║   ███████║██║     █████╔╝
-    ██║       ╚════██║   ██║   ██╔══██║██║     ██╔═██╗
-    ██║       ███████║   ██║   ██║  ██║╚██████╗██║  ██╗
-    ╚═╝       ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
- `;
-
 function HomeComponent() {
-	const healthCheck = useQuery(api.healthCheck.get);
+	const [selectedDocumentId, setSelectedDocumentId] =
+		useState<Id<"notes"> | null>(null);
 
 	return (
-		<div className="container mx-auto max-w-3xl px-4 py-2">
-			<pre className="overflow-x-auto font-mono text-sm">{TITLE_TEXT}</pre>
-			<div className="grid gap-6">
-				<section className="rounded-lg border p-4">
-					<h2 className="mb-2 font-medium">API Status</h2>
-					<div className="flex items-center gap-2">
-						<div
-							className={`h-2 w-2 rounded-full ${healthCheck === "OK" ? "bg-green-500" : healthCheck === undefined ? "bg-orange-400" : "bg-red-500"}`}
-						/>
-						<span className="text-sm text-muted-foreground">
-							{healthCheck === undefined
-								? "Checking..."
-								: healthCheck === "OK"
-									? "Connected"
-									: "Error"}
-						</span>
-					</div>
-				</section>
+		<>
+			<Sidebar>
+				<NotesList
+					selectedNoteId={selectedDocumentId}
+					onSelectNote={setSelectedDocumentId}
+				/>
+			</Sidebar>
+			<div className="flex-1 flex flex-col overflow-y-auto bg-[color-mix(in_srgb,var(--color-primary)_5%,var(--color-bg)_100%)] relative">
+				<div className="flex-1">
+					{selectedDocumentId ? (
+						"Editor"
+					) : (
+						<div className="flex items-center justify-center h-full">
+							<div className="text-center">
+								<h2 className="text-2xl font-semibold text-gray-900 mb-2 dark:text-white">
+									Welcome back!
+								</h2>
+								<p className="text-gray-600 dark:text-gray-400">
+									Select a document from the sidebar to start editing
+								</p>
+							</div>
+						</div>
+					)}
+				</div>
 			</div>
-		</div>
+		</>
 	);
 }

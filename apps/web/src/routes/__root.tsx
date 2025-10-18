@@ -1,28 +1,31 @@
-import Header from "@/components/header";
-import Loader from "@/components/loader";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Toaster } from "@/components/ui/sonner";
 import {
+	createRootRouteWithContext,
 	HeadContent,
 	Outlet,
-	createRootRouteWithContext,
 	useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import Loader from "@/components/loader";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 import "../index.css";
+import { Authenticated, Unauthenticated } from "convex/react";
+import { Login } from "@/components/login";
 
-export interface RouterAppContext {}
+// biome-ignore lint/complexity/noBannedTypes: para de me encher o saco
+export type RouterAppContext = {};
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
 	component: RootComponent,
 	head: () => ({
 		meta: [
 			{
-				title: "my-better-t-app",
+				title: "MIT Notes",
 			},
 			{
 				name: "description",
-				content: "my-better-t-app is a web application",
+				content:
+					"MIT Notes is a web application to fast and simple save your notes",
 			},
 		],
 		links: [
@@ -48,10 +51,13 @@ function RootComponent() {
 				disableTransitionOnChange
 				storageKey="vite-ui-theme"
 			>
-				<div className="grid grid-rows-[auto_1fr] h-svh">
-					<Header />
-					{isFetching ? <Loader /> : <Outlet />}
-				</div>
+				<main className="flex h-dvh w-dvw overflow-hidden">
+					<Authenticated>{isFetching ? <Loader /> : <Outlet />}</Authenticated>
+					<Unauthenticated>
+						<Login />
+					</Unauthenticated>
+				</main>
+
 				<Toaster richColors />
 			</ThemeProvider>
 			<TanStackRouterDevtools position="bottom-left" />

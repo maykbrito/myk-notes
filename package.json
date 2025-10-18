@@ -1,6 +1,20 @@
 {
   "name": "my-better-t-app",
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.0"
+  },
+  "packageManager": "bun@1.2.22",
   "private": true,
+  "scripts": {
+    "check": "biome check --write .",
+    "dev": "bun run --filter '*' dev",
+    "build": "bun run --filter '*' build",
+    "check-types": "bun run --filter '*' check-types",
+    "dev:native": "bun run --filter native dev",
+    "dev:web": "bun run --filter web dev",
+    "dev:server": "bun run --filter @my-better-t-app/backend dev",
+    "dev:setup": "bun run --filter @my-better-t-app/backend dev:setup"
+  },
   "type": "module",
   "workspaces": {
     "packages": [
@@ -12,20 +26,5 @@
       "@types/node": "^22.13.13",
       "typescript": "^5.8.3"
     }
-  },
-  "scripts": {
-    "check": "biome check --write .",
-    "dev": "bun run --filter '*' dev",
-    "build": "bun run --filter '*' build",
-    "check-types": "bun run --filter '*' check-types",
-    "dev:native": "bun run --filter native dev",
-    "dev:web": "bun run --filter web dev",
-    "dev:server": "bun run --filter @my-better-t-app/backend dev",
-    "dev:setup": "bun run --filter @my-better-t-app/backend dev:setup"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "@biomejs/biome": "^2.2.0"
-  },
-  "packageManager": "bun@1.2.22"
+  }
 }
