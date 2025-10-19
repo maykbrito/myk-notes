@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "my-better-t-app",
+      "name": "myk-notes",
       "devDependencies": {
         "@biomejs/biome": "^2.2.0",
       },
@@ -19,7 +19,7 @@
         "@blocknote/xl-ai": "^0.41.1",
         "@convex-dev/auth": "^0.0.90",
         "@hookform/resolvers": "^5.1.1",
-        "@my-better-t-app/backend": "workspace:*",
+        "@myk-notes/backend": "workspace:*",
         "@radix-ui/react-tooltip": "^1.2.8",
         "@tailwindcss/vite": "^4.0.15",
         "@tanstack/react-form": "^1.12.3",
@@ -51,7 +51,7 @@
       },
     },
     "packages/backend": {
-      "name": "@my-better-t-app/backend",
+      "name": "@myk-notes/backend",
       "version": "1.0.0",
       "dependencies": {
         "@ai-sdk/google": "^2.0.23",
@@ -261,7 +261,7 @@
 
     "@mantine/utils": ["@mantine/utils@6.0.22", "", { "peerDependencies": { "react": ">=16.8.0" } }, "sha512-RSKlNZvxhMCkOFZ6slbYvZYbWjHUM+PxDQnupIOxIdsTZQQjx/BFfrfJ7kQFOP+g7MtpOds8weAetEs5obwMOQ=="],
 
-    "@my-better-t-app/backend": ["@my-better-t-app/backend@workspace:packages/backend"],
+    "@myk-notes/backend": ["@myk-notes/backend@workspace:packages/backend"],
 
     "@opentelemetry/api": ["@opentelemetry/api@1.9.0", "", {}, "sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg=="],
 

@@ -1,5 +1,5 @@
-import { api } from "@my-better-t-app/backend/convex/_generated/api";
-import type { Id } from "@my-better-t-app/backend/convex/_generated/dataModel";
+import { api } from "@myk-notes/backend/convex/_generated/api";
+import type { Id } from "@myk-notes/backend/convex/_generated/dataModel";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "convex/react";
 import { Editor } from "@/modules/editor/ui/editor";

@@ -1,5 +1,5 @@
 {
-  "name": "my-better-t-app",
+  "name": "myk-notes",
   "devDependencies": {
     "@biomejs/biome": "^2.2.0"
   },
@@ -12,8 +12,8 @@
     "check-types": "bun run --filter '*' check-types",
     "dev:native": "bun run --filter native dev",
     "dev:web": "bun run --filter web dev",
-    "dev:server": "bun run --filter @my-better-t-app/backend dev",
-    "dev:setup": "bun run --filter @my-better-t-app/backend dev:setup"
+    "dev:server": "bun run --filter @myk-notes/backend dev",
+    "dev:setup": "bun run --filter @myk-notes/backend dev:setup"
   },
   "type": "module",
   "workspaces": {

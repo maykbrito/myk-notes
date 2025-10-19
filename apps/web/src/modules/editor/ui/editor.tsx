@@ -1,5 +1,5 @@
 import { BlockNoteView } from "@blocknote/mantine";
-import type { Doc } from "@my-better-t-app/backend/convex/_generated/dataModel";
+import type { Doc } from "@myk-notes/backend/convex/_generated/dataModel";
 import "@blocknote/mantine/style.css";
 import "@blocknote/core/fonts/inter.css";
 import {
@@ -22,7 +22,7 @@ import {
 	getAISlashMenuItems,
 } from "@blocknote/xl-ai";
 import { pt as aiPt } from "@blocknote/xl-ai/locales";
-import { api } from "@my-better-t-app/backend/convex/_generated/api";
+import { api } from "@myk-notes/backend/convex/_generated/api";
 import { DefaultChatTransport } from "ai";
 import { useMutation } from "convex/react";
 import { useEffect, useMemo, useState } from "react";
