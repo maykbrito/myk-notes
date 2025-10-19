@@ -12,6 +12,7 @@ import type * as auth from "../auth.js";
 import type * as files from "../files.js";
 import type * as healthCheck from "../healthCheck.js";
 import type * as http from "../http.js";
+import type * as httpActions from "../httpActions.js";
 import type * as notes from "../notes.js";
 
 import type {
@@ -33,6 +34,7 @@ declare const fullApi: ApiFromModules<{
   files: typeof files;
   healthCheck: typeof healthCheck;
   http: typeof http;
+  httpActions: typeof httpActions;
   notes: typeof notes;
 }>;
 declare const fullApiWithMounts: typeof fullApi;
