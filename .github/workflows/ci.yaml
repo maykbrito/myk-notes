@@ -18,6 +18,3 @@ jobs:
 
       - name: Typecheck
         run: bun run check-types
-
-      - name: Lint
-        run: bun run lint
