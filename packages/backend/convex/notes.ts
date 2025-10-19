@@ -176,3 +176,36 @@ export const archive = mutation({
 		return note;
 	},
 });
+
+export const deleteNote = mutation({
+	args: {
+		noteId: v.id("notes"),
+	},
+	handler: async (ctx, args) => {
+		const identity = await ctx.auth.getUserIdentity();
+
+		if (!identity) {
+			throw new Error("Not authenticated");
+		}
+
+		const userId = identity.subject;
+
+		if (!args.noteId) {
+			throw new Error("Note ID is required");
+		}
+
+		const existingNote = await ctx.db.get(args.noteId);
+
+		if (!existingNote) {
+			throw new Error("Note not found");
+		}
+
+		if (existingNote.userId !== userId) {
+			throw new Error("User does not have permission to delete this note");
+		}
+
+		await ctx.db.delete(existingNote._id);
+
+		return { success: true };
+	},
+});

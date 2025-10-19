@@ -15,6 +15,26 @@ interface EditorProps {
 
 export function Editor({ note }: EditorProps) {
 	const updateNote = useMutation(api.notes.upsert);
+	const generateUploadUrl = useMutation(api.files.generateUploadUrl);
+	const sendFile = useMutation(api.files.sendFile);
+	const getFile = useMutation(api.files.getFile);
+	// Uploads a file to convex.dev and returns the URL to the uploaded file.
+	async function uploadFile(file: File) {
+		const postUrl = await generateUploadUrl();
+		const result = await fetch(postUrl, {
+			method: "POST",
+			headers: { "Content-Type": file.type },
+			body: file,
+		});
+
+		const { storageId } = await result.json();
+		// Step 3: Save the newly allocated storage id to the database
+		await sendFile({ storageId, format: file.type });
+
+		// Step 4: Get the file URL from the database
+		const fileUrl = await getFile({ storageId });
+		return fileUrl.url;
+	}
 
 	const [initialContent, setInitialContent] = useState<
 		PartialBlock[] | undefined | "loading"
@@ -31,6 +51,7 @@ export function Editor({ note }: EditorProps) {
 			initialContent,
 			animations: false,
 			schema,
+			uploadFile,
 		});
 	}, [initialContent]);
 
