@@ -1,5 +1,6 @@
 import { ModeToggle } from "@/modules/mini-menu/ui/components/mode-toggle";
 import { AlternatePadding } from "./components/alternate-padding";
+import { RotateBg } from "./components/rotate-bg";
 import { ToggleSidebar } from "./components/toggle-sidebar";
 
 export function MiniMenu() {
@@ -8,6 +9,7 @@ export function MiniMenu() {
 			<ToggleSidebar />
 			<ModeToggle />
 			<AlternatePadding />
+			<RotateBg />
 		</nav>
 	);
 }

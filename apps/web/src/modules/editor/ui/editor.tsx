@@ -26,6 +26,7 @@ import { api } from "@myk-notes/backend/convex/_generated/api";
 import { DefaultChatTransport } from "ai";
 import { useMutation } from "convex/react";
 import { useEffect, useMemo, useState } from "react";
+import { useTheme } from "@/components/theme-provider";
 import { scheduleAfter } from "@/lib/timers";
 import { schema } from "./schemas";
 
@@ -36,6 +37,7 @@ interface EditorProps {
 const BASE_URL = import.meta.env.VITE_CONVEX_SITE_URL;
 
 export function Editor({ note }: EditorProps) {
+	const { theme } = useTheme();
 	const updateNote = useMutation(api.notes.upsert);
 	const generateUploadUrl = useMutation(api.files.generateUploadUrl);
 	const sendFile = useMutation(api.files.sendFile);
@@ -74,6 +76,7 @@ export function Editor({ note }: EditorProps) {
 			animations: false,
 			schema,
 			uploadFile,
+			defaultStyles: false,
 			dictionary: {
 				...pt,
 				ai: aiPt, // add default translations for the AI extension
@@ -118,7 +121,8 @@ export function Editor({ note }: EditorProps) {
 		<BlockNoteView
 			editor={editor}
 			onChange={handleSave}
-			className="h-full"
+			theme={theme as "light" | "dark"}
+			className="h-full prose dark:prose-invert max-w-none marker:text-black/80 dark:marker:text-white/80 prose-img:m-0 prose-p:m-0 prose-headings:mb-0.5 relative z-[1]"
 			data-theming-css-variables-demo
 			formattingToolbar={false}
 			slashMenu={false}
@@ -157,9 +161,7 @@ function FormattingToolbarWithAI() {
 }
 
 // Slash menu with the AI option added
-function SuggestionMenuWithAI(props: {
-	editor: BlockNoteEditor<any, any, any>;
-}) {
+function SuggestionMenuWithAI(props: { editor: BlockNoteEditor }) {
 	return (
 		<SuggestionMenuController
 			triggerCharacter="/"

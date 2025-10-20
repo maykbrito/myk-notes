@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@plugin '@tailwindcss/typography';
+@plugin 'tailwindcss-bg-patterns';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -141,4 +143,7 @@ body {
 }
 .bn-container[data-theming-css-variables-demo] .bn-block-group .bn-block:not(:has(.bn-toggle-wrapper)) .bn-block-group .bn-block-outer:not([data-prev-depth-changed]):before {
   border-left: none;
+}
+[data-content-type=heading] {
+    --level: unset !important;
 }
