@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import type { Id } from "./_generated/dataModel";
+import type { Doc, Id } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
 
 export const getSidebar = query({
@@ -18,33 +18,11 @@ export const getSidebar = query({
 
 		const notes = await ctx.db
 			.query("notes")
-			.withIndex("by_user_parent", (q) =>
+			.withIndex("by_user_parent_updatedAt", (q) =>
 				q.eq("userId", userId).eq("parentId", args.parentId),
 			)
 			.filter((q) => q.eq(q.field("isArchived"), false))
-			.order("asc")
-			.collect();
-
-		return notes;
-	},
-});
-
-export const all = query({
-	args: {},
-	handler: async (ctx) => {
-		const identity = await ctx.auth.getUserIdentity();
-
-		if (!identity) {
-			throw new Error("Not authenticated");
-		}
-
-		const userId = identity.subject;
-
-		const notes = await ctx.db
-			.query("notes")
-			.withIndex("by_user", (q) => q.eq("userId", userId))
-			.filter((q) => q.eq(q.field("isArchived"), false))
-			.order("asc")
+			.order("desc")
 			.collect();
 
 		return notes;
@@ -154,7 +132,7 @@ export const archive = mutation({
 		const recursiveArchive = async (noteId: Id<"notes">) => {
 			const children = await ctx.db
 				.query("notes")
-				.withIndex("by_user_parent", (q) =>
+				.withIndex("by_user_parent_updatedAt", (q) =>
 					q.eq("userId", userId).eq("parentId", noteId),
 				)
 				.collect();
@@ -172,6 +150,89 @@ export const archive = mutation({
 		});
 
 		recursiveArchive(args.id);
+
+		return note;
+	},
+});
+
+export const getTrash = query({
+	handler: async (ctx) => {
+		const identity = await ctx.auth.getUserIdentity();
+
+		if (!identity) {
+			throw new Error("Not authenticated");
+		}
+
+		const userId = identity.subject;
+
+		const notes = await ctx.db
+			.query("notes")
+			.withIndex("by_user", (q) => q.eq("userId", userId))
+			.filter((q) => q.eq(q.field("isArchived"), true))
+			.order("desc")
+			.collect();
+
+		return notes;
+	},
+});
+
+export const restore = mutation({
+	args: {
+		noteId: v.id("notes"),
+	},
+	handler: async (ctx, args) => {
+		const identity = await ctx.auth.getUserIdentity();
+
+		if (!identity) {
+			throw new Error("Not authenticated");
+		}
+
+		const userId = identity.subject;
+
+		if (!args.noteId) {
+			throw new Error("Note ID is required");
+		}
+
+		const existingNote = await ctx.db.get(args.noteId);
+
+		if (!existingNote) {
+			throw new Error("Note not found");
+		}
+
+		if (existingNote.userId !== userId) {
+			throw new Error("User does not have permission to restore this note");
+		}
+
+		const recursiveRestore = async (noteId: Id<"notes">) => {
+			const children = await ctx.db
+				.query("notes")
+				.withIndex("by_user_parent_updatedAt", (q) =>
+					q.eq("userId", userId).eq("parentId", noteId),
+				)
+				.collect();
+
+			for (const child of children) {
+				await ctx.db.patch(child._id, {
+					isArchived: false,
+				});
+				await recursiveRestore(child._id);
+			}
+		};
+
+		const options: Partial<Doc<"notes">> = {
+			isArchived: false,
+		};
+
+		if (existingNote.parentId) {
+			const parent = await ctx.db.get(existingNote.parentId);
+			if (parent?.isArchived) {
+				options.parentId = undefined;
+			}
+		}
+
+		const note = await ctx.db.patch(args.noteId, options);
+
+		recursiveRestore(args.noteId);
 
 		return note;
 	},

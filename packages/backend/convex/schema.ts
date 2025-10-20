@@ -14,7 +14,8 @@ export default defineSchema({
 		userId: v.string(),
 	})
 		.index("by_user", ["userId"])
-		.index("by_user_parent", ["userId", "parentId"]),
+		.index("by_user_parent_updatedAt", ["userId", "parentId", "updatedAt"]),
+
 	files: defineTable({
 		storageId: v.id("_storage"),
 		author: v.string(),

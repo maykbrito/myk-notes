@@ -18,7 +18,7 @@ interface Props {
 	onCreate?: () => void;
 	onArchive?: () => void;
 
-	onClick: () => void;
+	onClick?: () => void;
 	icon: LucideIcon;
 	label: string;
 }
@@ -58,9 +58,16 @@ export function Item({
 	};
 
 	return (
-		<button
-			type="button"
+		// biome-ignore lint/a11y/useSemanticElements: this is nested inside a button
+		<div
+			tabIndex={0}
+			role="button"
 			onClick={onClick}
+			onKeyDown={(e) => {
+				if (e.key === "Enter") {
+					onClick?.();
+				}
+			}}
 			style={{ paddingLeft: level ? `${level * 20 + 12}px` : "12px" }}
 			className={cn(
 				"group flex min-h-[27px] w-full cursor-pointer items-center p-2 font-medium text-muted-foreground text-sm hover:bg-primary/5",
@@ -119,7 +126,7 @@ export function Item({
 					</div>
 				</div>
 			)}
-		</button>
+		</div>
 	);
 }
 

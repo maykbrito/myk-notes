@@ -1,12 +1,19 @@
 import { api } from "@myk-notes/backend/convex/_generated/api";
 import type { Id } from "@myk-notes/backend/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
-import { FileText, PlusCircle } from "lucide-react";
+import { FileText, PlusCircle, Trash } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { getNoteTitle } from "../functions/get-note-title";
 import { Item } from "./item";
+import { TrashBox } from "./trash-box";
 
 interface NotesListProps {
 	parentId?: Id<"notes">;
@@ -78,7 +85,7 @@ export function NotesList({
 
 	if (notes === undefined) {
 		return (
-			<div className="space-y-2">
+			<div className="space-y-2 mt-1">
 				<Item.Skeleton level={level} />
 				{level === 0 && (
 					<>
@@ -93,16 +100,19 @@ export function NotesList({
 	return (
 		<>
 			{level === 0 && (
-				<Item
-					onClick={() => handleCreate()}
-					icon={PlusCircle}
-					label="Create new note"
-				/>
+				<>
+					<Item
+						onClick={() => handleCreate()}
+						icon={PlusCircle}
+						label="Create new note"
+					/>
+					<Separator className="mb-1" />
+				</>
 			)}
 			<p
 				style={{ paddingLeft: level ? `${level * 20 + 24}px` : "24px" }}
 				className={cn(
-					"hidden text-sm font-medium text-muted-foreground/80",
+					"hidden text-sm font-medium text-muted-foreground/80 mt-1 pb-1",
 					expanded && "last:block",
 					level === 0 && "hidden",
 				)}
@@ -110,7 +120,7 @@ export function NotesList({
 				No notes found.
 			</p>
 			{notes.length > 0 &&
-				notes.toReversed().map((note) => (
+				notes.map((note) => (
 					<div key={note._id}>
 						<Item
 							id={note._id}
@@ -132,6 +142,20 @@ export function NotesList({
 						)}
 					</div>
 				))}
+
+			{level === 0 && (
+				<>
+					<Separator className="mt-1" />
+					<Popover>
+						<PopoverTrigger className="w-full">
+							<Item icon={Trash} label="Trash" />
+						</PopoverTrigger>
+						<PopoverContent side="right" className="w-72 p-0">
+							<TrashBox />
+						</PopoverContent>
+					</Popover>
+				</>
+			)}
 		</>
 	);
 }
