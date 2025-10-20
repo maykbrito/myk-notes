@@ -7,7 +7,7 @@ import {
 	filterSuggestionItems,
 	type PartialBlock,
 } from "@blocknote/core";
-import { pt } from "@blocknote/core/locales";
+import { en } from "@blocknote/core/locales";
 import {
 	FormattingToolbar,
 	FormattingToolbarController,
@@ -21,7 +21,7 @@ import {
 	createAIExtension,
 	getAISlashMenuItems,
 } from "@blocknote/xl-ai";
-import { pt as aiPt } from "@blocknote/xl-ai/locales";
+import { en as aiEn } from "@blocknote/xl-ai/locales";
 import { api } from "@myk-notes/backend/convex/_generated/api";
 import { DefaultChatTransport } from "ai";
 import { useMutation } from "convex/react";
@@ -78,8 +78,8 @@ export function Editor({ note }: EditorProps) {
 			uploadFile,
 			defaultStyles: false,
 			dictionary: {
-				...pt,
-				ai: aiPt, // add default translations for the AI extension
+				...en,
+				ai: aiEn, // add default translations for the AI extension
 			},
 			extensions: [
 				createAIExtension({
