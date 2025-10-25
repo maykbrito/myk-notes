@@ -28,6 +28,7 @@ import { useMutation } from "convex/react";
 import { useEffect, useMemo, useState } from "react";
 import { useTheme } from "@/components/theme-provider";
 import { scheduleAfter } from "@/lib/timers";
+import { insertIframe } from "../functions/create-iframe-embed";
 import { schema } from "./schemas";
 
 interface EditorProps {
@@ -109,7 +110,7 @@ export function Editor({ note }: EditorProps) {
 		return "Loading editor...";
 	}
 
-	const handleSave = async (editor: BlockNoteEditor) => {
+	const handleSave = async (editor: BlockNoteEditor | any) => {
 		const content = editor.document;
 
 		scheduleAfter(`save-${note._id}`, 500, async () => {
@@ -140,7 +141,7 @@ export function Editor({ note }: EditorProps) {
         and replace it for one with an AI option (defined below). 
         (See "Suggestion Menus" in docs)
         */}
-			<SuggestionMenuWithAI editor={editor} />
+			<SuggestionMenuWithAI editor={editor as any} />
 		</BlockNoteView>
 	);
 }
@@ -171,6 +172,7 @@ function SuggestionMenuWithAI(props: { editor: BlockNoteEditor }) {
 						...getDefaultReactSlashMenuItems(props.editor),
 						// add the default AI slash menu items, or define your own
 						...getAISlashMenuItems(props.editor),
+						insertIframe(props.editor),
 					],
 					query,
 				)
