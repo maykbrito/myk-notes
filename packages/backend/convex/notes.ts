@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import type { Doc, Id } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
+import { getUserId } from "./utils";
 
 export const getSidebar = query({
 	args: {
@@ -8,13 +9,7 @@ export const getSidebar = query({
 	},
 
 	handler: async (ctx, args) => {
-		const identity = await ctx.auth.getUserIdentity();
-
-		if (!identity) {
-			throw new Error("Not authenticated");
-		}
-
-		const userId = identity.subject;
+		const userId = await getUserId(ctx);
 
 		const notes = await ctx.db
 			.query("notes")
@@ -34,13 +29,7 @@ export const get = query({
 		id: v.id("notes"),
 	},
 	handler: async (ctx, args) => {
-		const identity = await ctx.auth.getUserIdentity();
-
-		if (!identity) {
-			throw new Error("Not authenticated");
-		}
-
-		const userId = identity.subject;
+		const userId = await getUserId(ctx);
 
 		const [note] = await ctx.db
 			.query("notes")
@@ -59,13 +48,7 @@ export const upsert = mutation({
 		parentId: v.optional(v.id("notes")),
 	},
 	handler: async (ctx, args) => {
-		const identity = await ctx.auth.getUserIdentity();
-
-		if (!identity) {
-			throw new Error("Not authenticated");
-		}
-
-		const userId = identity.subject;
+		const userId = await getUserId(ctx);
 
 		if (!args.content.trim()) {
 			throw new Error("Content cannot be empty");
@@ -103,13 +86,7 @@ export const archive = mutation({
 		id: v.id("notes"),
 	},
 	handler: async (ctx, args) => {
-		const identity = await ctx.auth.getUserIdentity();
-
-		if (!identity) {
-			throw new Error("Not authenticated");
-		}
-
-		const userId = identity.subject;
+		const userId = await getUserId(ctx);
 
 		if (!args.id) {
 			throw new Error("Note ID is required");
@@ -157,13 +134,7 @@ export const archive = mutation({
 
 export const getTrash = query({
 	handler: async (ctx) => {
-		const identity = await ctx.auth.getUserIdentity();
-
-		if (!identity) {
-			throw new Error("Not authenticated");
-		}
-
-		const userId = identity.subject;
+		const userId = await getUserId(ctx);
 
 		const notes = await ctx.db
 			.query("notes")
@@ -181,13 +152,7 @@ export const restore = mutation({
 		noteId: v.id("notes"),
 	},
 	handler: async (ctx, args) => {
-		const identity = await ctx.auth.getUserIdentity();
-
-		if (!identity) {
-			throw new Error("Not authenticated");
-		}
-
-		const userId = identity.subject;
+		const userId = await getUserId(ctx);
 
 		if (!args.noteId) {
 			throw new Error("Note ID is required");
@@ -243,13 +208,7 @@ export const deleteNote = mutation({
 		noteId: v.id("notes"),
 	},
 	handler: async (ctx, args) => {
-		const identity = await ctx.auth.getUserIdentity();
-
-		if (!identity) {
-			throw new Error("Not authenticated");
-		}
-
-		const userId = identity.subject;
+		const userId = await getUserId(ctx);
 
 		if (!args.noteId) {
 			throw new Error("Note ID is required");

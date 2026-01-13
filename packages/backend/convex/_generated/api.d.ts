@@ -13,9 +13,11 @@ import type * as files from "../files.js";
 import type * as healthCheck from "../healthCheck.js";
 import type * as http from "../http.js";
 import type * as httpActions from "../httpActions.js";
+import type * as migrations from "../migrations.js";
 import type * as notes from "../notes.js";
 import type * as rateLimiter from "../rateLimiter.js";
 import type * as users from "../users.js";
+import type * as utils from "../utils.js";
 
 import type {
   ApiFromModules,
@@ -37,9 +39,11 @@ declare const fullApi: ApiFromModules<{
   healthCheck: typeof healthCheck;
   http: typeof http;
   httpActions: typeof httpActions;
+  migrations: typeof migrations;
   notes: typeof notes;
   rateLimiter: typeof rateLimiter;
   users: typeof users;
+  utils: typeof utils;
 }>;
 declare const fullApiWithMounts: typeof fullApi;
 

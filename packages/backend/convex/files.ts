@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation } from "./_generated/server";
+import { getUserId } from "./utils";
 
 export const generateUploadUrl = mutation({
 	handler: async (ctx) => {
@@ -10,15 +11,11 @@ export const generateUploadUrl = mutation({
 export const sendFile = mutation({
 	args: { storageId: v.id("_storage"), format: v.string() },
 	handler: async (ctx, args) => {
-		const identity = await ctx.auth.getUserIdentity();
-
-		if (!identity) {
-			throw new Error("Not authenticated");
-		}
+		const userId = await getUserId(ctx);
 
 		await ctx.db.insert("files", {
 			storageId: args.storageId,
-			author: identity.subject,
+			author: userId,
 			format: args.format.split("/")[0],
 		});
 	},
